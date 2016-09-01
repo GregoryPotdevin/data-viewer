@@ -1,9 +1,11 @@
 import React from 'react'
 import { AdminPanel } from '../components'
+import { Link } from 'react-router'
 import { Icon } from '../../components/Icon'
 import { LinkButton } from '../../components/LinkButton'
 import { Button, ButtonGroup, Container } from 'react-blazecss'
 import { DataEditor } from '../../components/DataEditor'
+import { browserHistory } from 'react-router'
 
 const host = "http://localhost:8080"
 
@@ -71,15 +73,26 @@ function computeErrors(data, fields){
   else return errors
 }
 
-function post(endpoint, data){
+function sendDocument(endpoint, data){
   return fetch(host + endpoint, {
-    method: 'POST', 
+    method: data.id ? 'PUT' : 'POST', 
     mode: 'cors', 
     redirect: 'follow',
     headers: new Headers({
       'Content-Type': 'application/json'
     }),
     body: JSON.stringify(data)
+  })
+}
+
+function deleteDocument(endpoint){
+  return fetch(host + endpoint, {
+    method: 'DELETE', 
+    mode: 'cors', 
+    redirect: 'follow',
+    headers: new Headers({
+      'Content-Type': 'application/json'
+    })
   })
 }
 
@@ -95,6 +108,7 @@ export class EditUser extends React.Component {
     }
 
     this.addUser = this.addUser.bind(this)
+    this.deleteDocument = this.deleteDocument.bind(this)
 
     this.onChange = (data) => {
       if (this.state.errors){
@@ -119,28 +133,39 @@ export class EditUser extends React.Component {
     if (errors){
       this.setState({ errors })
     } else {
+      const { isAdd } = this.props
+
       console.log("upload", this.state.data)
-      post('/api/documents', this.state.data)
+      sendDocument(isAdd ? '/api/documents' : ('/api/documents/' + this.state.data.id), this.state.data)
       .then(res => res.json())
       .then(res => {
-        console.log("res", res)
+        setTimeout(() => browserHistory.push('/admin/users'), 500)
       })
     }
   }
 
+  deleteDocument(e){
+    e.preventDefault()
+    e.stopPropagation()
+
+    deleteDocument('/api/documents/' + this.state.data.id)
+      .then(res => res.json())
+      .then(res => {
+        setTimeout(() => browserHistory.push('/admin/users'), 1000)
+      })
+  }
+
   render(){
     return (
-      <AdminPanel title="Ajouter un utilisateur">
-        <Container size="large">
-          {this.renderButtons()}
-          <DataEditor size="large" 
-                      fields={userFields}
-                      errors={this.state.errors} 
-                      onChange={this.onChange}
-                      data={this.state.data} />
-          {this.renderButtons()}
-        </Container>
-      </AdminPanel>
+      <Container size="large">
+        {this.renderButtons()}
+        <DataEditor size="large" 
+                    fields={userFields}
+                    errors={this.state.errors} 
+                    onChange={this.onChange}
+                    data={this.state.data} />
+        {this.renderButtons()}
+      </Container>
     )
   }
 
@@ -159,6 +184,9 @@ export class EditUser extends React.Component {
         <ButtonGroup>
           <Button bStyle="success"  onClick={this.addUser}>
             <Icon name="save"/> Save
+          </Button>
+          <Button bStyle="error"  onClick={this.deleteDocument}>
+            <Icon name="trash"/> Delete
           </Button>
         </ButtonGroup>
       )
@@ -206,15 +234,19 @@ export class EditUserApp extends React.Component {
     console.log("app props", this.props)
     const { params } = this.props
     return (
-      <div> 
+      <AdminPanel title={<span><Link className="c-link" to="/admin/users">Utilisateurs</Link> / Editer (id: {params.id})</span>}>
         <DataFetcher key={params.id} 
                      url={host + `/api/documents/${params.id}`}
                      renderer={(data) => data ? <EditUser data={data} /> : null} />
-      </div>
+      </AdminPanel>
     )
   }
 }
 
-export const AddUserApp = (props) => <EditUser {...props} isAdd />
+export const AddUserApp = (props) => (
+  <AdminPanel title={<span><Link className="c-link" to="/admin/users">Utilisateurs</Link> / Ajouter</span>}>
+    <EditUser {...props} isAdd />
+  </AdminPanel>
+)
 
 export * from './user-list'

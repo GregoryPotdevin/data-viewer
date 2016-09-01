@@ -1,8 +1,13 @@
 import React from 'react'
+import { Link } from 'react-router'
 import { AdminPanel } from '../components'
 import { Icon } from '../../components/Icon'
 import { LinkButton } from '../../components/LinkButton'
-import { Button, ButtonGroup, Container } from 'react-blazecss'
+import { 
+  H3, SubHeading,
+  Button, ButtonGroup,
+  Card, CardContent, Grid, Cell, Image 
+} from 'react-blazecss'
 import { DataEditor } from '../../components/DataEditor'
 
 const host = "http://localhost:8080"
@@ -25,7 +30,7 @@ class HitsTable extends React.Component<any, {}> {
         <table className="sk-table sk-table-striped" style={{width: '100%', boxSizing: 'border-box'}}>
           <thead>
             <tr>
-              <th style={{width: 128}}></th>
+              <th style={{width: 100}}></th>
               <th style={{width: 64, textAlign: 'right'}}>Id</th>
               <th style={{width: 45}}></th>
               <th>First Name</th>
@@ -41,7 +46,7 @@ class HitsTable extends React.Component<any, {}> {
                   </label>
                   <ButtonGroup ghost>
                     <LinkButton bStyle="primary" to={`/admin/users/${_source.id}`}><Icon name="pencil"/></LinkButton>
-                    <LinkButton bStyle="error" to={`/admin/users/$_source.id`}><Icon name="trash"/></LinkButton>
+                    {/*<LinkButton bStyle="error" to={`/admin/users/$_source.id`}><Icon name="trash"/></LinkButton>*/}
                   </ButtonGroup>
                 </td>
                 <td style={{textAlign: 'right'}}>{_source.id}</td>
@@ -59,13 +64,31 @@ class HitsTable extends React.Component<any, {}> {
   }
 }
 
+const MediaCard = ({result}) => (
+  <Link to={`/admin/users/${result._source.id}`} style={{width: '100%'}}>
+    <Card shadow="higher" style={{width: '100%'}}>
+      <CardContent>
+        <Grid noGutter>
+          <Cell fixedWidth="4em">
+            <Image src={host + "/api/files/" + result._source.avatar.id}  style={{borderRadius: '50%', display: 'block'}}/>
+          </Cell>
+          <Cell style={{paddingLeft: 16}}>
+            <H3 size="small" style={{paddingTop: 0, paddingBottom: 0}}>{result._source.label || (result._source.firstname + " " + result._source.lastname)}<br />
+            <SubHeading style={{paddingTop: 0, paddingBottom: 0}}>{result._source.role}</SubHeading></H3>
+          </Cell>
+        </Grid>
+      </CardContent>
+    </Card>
+  </Link>
+)
+
 class BlazeSearchBox extends SearchBox {
   render() {
     let block = this.bemBlocks.container
 
     return (
       <div>
-        <form onSubmit={this.onSubmit.bind(this)}>
+        <form onSubmit={this.onSubmit.bind(this)} style={{marginLeft: '1em'}}>
           <input type="text"
           data-qa="query"
           className={"c-field"}
@@ -107,28 +130,23 @@ class TableSearch extends React.Component {
                 <HitsStats translations={{
                   "hitstats.results_found":"{hitCount} results found"
                 }}/>
-                <ViewSwitcherToggle/>
-                {/*<ViewSwitcherToggle listComponent={Select}/>*/}
-                <SortingSelector options={[
-                  {label:"Relevance", field:"_score", order:"desc"},
-                  {label:"Latest Releases", field:"released", order:"desc"},
-                  {label:"Earliest Releases", field:"released", order:"asc"}
-                ]}/>
-                {/*<SortingSelector options={[
-                  {label:"Relevance", field:"_score", order:"desc"},
-                  {label:"Latest Releases", field:"released", order:"desc"},
-                  {label:"Earliest Releases", field:"released", order:"asc"}
-                ]} listComponent={Toggle}/>*/}
-              </ActionBarRow>
-              <ActionBarRow>
-
                 <BlazeSearchBox autofocus={true}
                                 placeholder="filtrer" 
                                 searchOnChange={true} 
                                 prefixQueryFields={["firstname", "lastname"]}/>
 
+                <ViewSwitcherToggle/>
+                {/*<ViewSwitcherToggle listComponent={Select}/>*/}
 
+
+
+                <SortingSelector options={[
+                  {label:"Pertinence", field:"_score", order:"desc"},
+                  {label:"Prénom", field:"firstname", order:"desc"},
+                  {label:"Nom", field:"lastname", order:"desc"}
+                ]}/>
               </ActionBarRow>
+
 {/*
               <ActionBarRow>
                 <GroupedSelectedFilters/>
@@ -140,7 +158,8 @@ class TableSearch extends React.Component {
             <ViewSwitcherHits
                 hitsPerPage={12} highlightFields={["title","plot"]}
                 hitComponents = {[
-                  {key:"movie-table", title:"Movies", listComponent:HitsTable, defaultOption:true},
+                  {key:"table", title:"Table", listComponent:HitsTable, defaultOption:true},
+                  {key:"list", title:"Liste", itemComponent:MediaCard},
                 ]}
                 scrollTo="body"
             />

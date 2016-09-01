@@ -32,9 +32,11 @@ render((
     <Route path="/admin" component={AdminApp}>
       <Route path="home" component={Empty}/>
       <Route path="pages" component={Empty}/>
-      <Route path="users" component={UserApp}/>
-      <Route path="users/_add" component={AddUserApp}/>
-      <Route path="users/:id" component={EditUserApp}/>
+      <Route path="users">
+        <IndexRoute component={UserApp} />
+        <Route path="_add" component={AddUserApp}/>
+        <Route path=":id" component={EditUserApp}/>
+      </Route>
       <Route path="agenda" component={CalendarApp}/>
       <Route path="workflow" component={WorkflowApp}/>
         {/*<Route path="about" component={About}/>
