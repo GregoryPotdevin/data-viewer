@@ -20,7 +20,7 @@ import brand from 'img/pam_couleur.png'
 import { Redirect, Router, IndexRoute, Route, Link, browserHistory } from 'react-router'
 import './styles.scss'
 
-import { AdminApp, CalendarApp, WorkflowApp, UserApp, AddUserApp } from './admin'
+import { AdminApp, CalendarApp, WorkflowApp, UserApp, AddUserApp, EditUserApp } from './admin'
 
 const Empty = (props) => (
   null
@@ -34,6 +34,7 @@ render((
       <Route path="pages" component={Empty}/>
       <Route path="users" component={UserApp}/>
       <Route path="users/_add" component={AddUserApp}/>
+      <Route path="users/:id" component={EditUserApp}/>
       <Route path="agenda" component={CalendarApp}/>
       <Route path="workflow" component={WorkflowApp}/>
         {/*<Route path="about" component={About}/>

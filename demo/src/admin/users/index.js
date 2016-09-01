@@ -71,13 +71,25 @@ function computeErrors(data, fields){
   else return errors
 }
 
-export class AddUserApp extends React.Component {
+function post(endpoint, data){
+  return fetch(host + endpoint, {
+    method: 'POST', 
+    mode: 'cors', 
+    redirect: 'follow',
+    headers: new Headers({
+      'Content-Type': 'application/json'
+    }),
+    body: JSON.stringify(data)
+  })
+}
+
+export class EditUser extends React.Component {
 
   constructor(props){
     super(props)
 
     this.state = {
-      data: {
+      data: props.data || {
         table: "users"
       }
     }
@@ -108,11 +120,15 @@ export class AddUserApp extends React.Component {
       this.setState({ errors })
     } else {
       console.log("upload", this.state.data)
+      post('/api/documents', this.state.data)
+      .then(res => res.json())
+      .then(res => {
+        console.log("res", res)
+      })
     }
   }
 
   render(){
-    console.log("fetch", fetch)
     return (
       <AdminPanel title="Ajouter un utilisateur">
         <Container size="large">
@@ -129,28 +145,76 @@ export class AddUserApp extends React.Component {
   }
 
   renderButtons(){
+    const { isAdd } = this.props
+    if (isAdd){
+      return (
+        <ButtonGroup>
+          <Button bStyle="success"  onClick={this.addUser}>
+            <Icon name="plus"/> Ajouter
+          </Button>
+        </ButtonGroup>
+      )
+    } else {
+      return (
+        <ButtonGroup>
+          <Button bStyle="success"  onClick={this.addUser}>
+            <Icon name="save"/> Save
+          </Button>
+        </ButtonGroup>
+      )
+    }
+  }
+}
+
+export class DataFetcher extends React.Component {
+
+  constructor(props){
+    super(props)
+
+    this.state = {
+      data: null
+    }
+  }
+
+  async componentWillMount(){
+    this._isMounted = true
+    
+    const res = await fetch(this.props.url)
+    if (!this._isMounted) return
+
+    const data = await res.json()
+    if (!this._isMounted) return
+
+    this.setState({ data })
+  }
+
+  componentWillUnmount(){
+    this._isMounted = false
+  }
+
+  render(){
+    const { renderer } = this.props
+    return renderer(this.state.data)
+  }
+}
+
+export class EditUserApp extends React.Component {
+
+
+
+  render(){
+    console.log("app props", this.props)
+    const { params } = this.props
     return (
-      <ButtonGroup>
-        <Button bStyle="success"  onClick={this.addUser}>
-          <Icon name="plus"/> Ajouter
-        </Button>
-      </ButtonGroup>
+      <div> 
+        <DataFetcher key={params.id} 
+                     url={host + `/api/documents/${params.id}`}
+                     renderer={(data) => data ? <EditUser data={data} /> : null} />
+      </div>
     )
   }
 }
 
-export class UserApp extends React.Component {
-  render(){
-    return (
-      <AdminPanel title="Utilisateurs" headerRight={
-        <ButtonGroup ghost>
-          <LinkButton bStyle="primary" to="/admin/users/_add"><Icon name="plus" /> Ajouter</LinkButton>
-        </ButtonGroup>
-      }>
-        <div>
-          List users...
-        </div>
-      </AdminPanel>
-    )
-  }
-}
+export const AddUserApp = (props) => <EditUser {...props} isAdd />
+
+export * from './user-list'
