@@ -17,55 +17,10 @@ import Portal from 'react-portal'
 
 import brand from 'img/pam_couleur.png'
 
-import { Router, IndexRoute, Route, Link, browserHistory } from 'react-router'
+import { Redirect, Router, IndexRoute, Route, Link, browserHistory } from 'react-router'
 import './styles.scss'
 
-
-class Demo extends React.Component {
-
-  constructor(props){
-    super(props)
-
-    this.state = {
-      showImportPopup: false
-    }
-
-  }
-  
-  render(){
-    console.log("data", this.state.data)
-    return (
-      <div className="c-text">
-        <Nav inline shadow="high" animate position="top" fixed style={{zIndex: 11}}>
-          {/*<Nav inline shadow="higher" animate position="top" fixed>*/}
-            <span className="c-nav__brand"><img src={brand} /></span>
-            <NavItem right bStyle="primary">Gregory</NavItem>
-        </Nav>
-        <Panel style={{marginTop: 54}}>
-          <Grid noGutter className="o-panel">
-            <Cell fixedWidth={250} className="o-panel-container">
-              <SideMenu />
-             {/* <Nav light className="o-panel" style={{paddingTop: 12}}>
-                <NavItem bStyle="primary">Link 1</NavItem>
-              </Nav>*/}
-            </Cell>
-            <Cell className="o-panel-container">
-              <Panel>
-                <Center style={{width: '100%', height: '100%', padding: 8}}>
-                  {/*<FileDropZone text={<Center><H3>Drop files here</H3></Center>} />*/}
-                </Center>
-              </Panel>
-            </Cell>
-          </Grid>
-        </Panel>
-        {<Portal isOpened={this.state.showImportPopup}>
-            <ImportPopup onClose={() => this.setState({showImportPopup: false})}/>
-          </Portal>
-        }
-      </div>
-    )
-  } 
-}
+import { AdminApp, CalendarApp } from './admin'
 
 const Empty = (props) => (
   null
@@ -73,23 +28,28 @@ const Empty = (props) => (
 
 render((
   <Router history={browserHistory}>
-    <Route path="/" component={Demo} />
-    <Route path="/pages" component={Demo}/>
-    <Route path="/users" component={Demo}/>
-    <Route path="/medias" component={Demo}/>
-      {/*<Route path="about" component={About}/>
-      <Route path="users" component={Users}>
-        <Route path="/user/:userId" component={User}/>
+    <Redirect from="/" to="/admin/home"/>
+    <Route path="/admin" component={AdminApp}>
+      <Route path="home" component={Empty}/>
+      <Route path="pages" component={Empty}/>
+      <Route path="users" component={Empty}/>
+      <Route path="agenda" component={CalendarApp}/>
+      <Route path="workflow" component={Empty}/>
+        {/*<Route path="about" component={About}/>
+        <Route path="users" component={Users}>
+          <Route path="/user/:userId" component={User}/>
+        </Route>
+        */}
+      <Route path="medias" component={Empty}/>
+      <Route path="tables" component={Empty}>
+        <Route path=":tableId" component={Empty}/>
       </Route>
-      */}
-    <Route path="/tables" component={Demo}>
-      <Route path=":tableId" component={Empty}/>
+      <Route path="refs" component={Empty}>
+        <IndexRoute component={Empty} />
+        <Route path=":refId" component={Empty} />
+      </Route>
+      <Route path="forms" component={Empty}/>
     </Route>
-    <Route path="/refs" component={Demo}>
-      <IndexRoute component={Empty} />
-      <Route path=":refId" component={Empty} />
-    </Route>
-    <Route path="/forms" component={Demo}/>
   </Router>
 ), document.querySelector('#demo'))
 
