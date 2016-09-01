@@ -42,6 +42,13 @@ const userFields = [
     {name: "google_plus", label: "Google+", type: "string", width: "50%"},
     {name: "twitter", label: "Twitter", type: "string", width: "50%"},
     {name: "linkedin", label: "LinkedIn", type: "string", width: "50%"},
+  ]},
+
+  { type: "section", title: "Enfants", fields: [    
+    {name: "children", label: "Children", showLabel: false, type: "table", fields: [
+      {name: "name", label: "Name", type: "string"},
+      {name: "age", label: "Age", type: "number"},
+    ]},
   ]}
 ]
 
@@ -139,7 +146,7 @@ export class EditUser extends React.Component {
       sendDocument(isAdd ? '/api/documents' : ('/api/documents/' + this.state.data.id), this.state.data)
       .then(res => res.json())
       .then(res => {
-        setTimeout(() => browserHistory.push('/admin/users'), 500)
+        setTimeout(() => browserHistory.push('/admin/users'), 750)
       })
     }
   }

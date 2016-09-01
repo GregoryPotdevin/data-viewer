@@ -35,6 +35,7 @@ class HitsTable extends React.Component<any, {}> {
               <th style={{width: 45}}></th>
               <th>First Name</th>
               <th>Last Name</th>
+              <th>Role</th>
             </tr>
           </thead>
           <tbody>
@@ -55,6 +56,7 @@ class HitsTable extends React.Component<any, {}> {
                 </td>
                 <td>{_source.firstname}</td>
                 <td>{_source.lastname}</td>
+                <td>{_source.role}</td>
               </tr>
             ))}
           </tbody>
@@ -64,16 +66,33 @@ class HitsTable extends React.Component<any, {}> {
   }
 }
 
+function initials(firstname="", lastname=""){
+  let ini = ""
+  if (firstname.length > 0) ini += firstname[0]
+  if (lastname.length > 0) ini += lastname[0]
+  return ini
+}
+
+const Avatar = ({avatar, firstname, lastname}) => (
+  <figure className="avatar"
+          data-initial={avatar ? '' : initials(firstname, lastname)}  
+          style={{width: '2em', height: '2em', background: '#42a5f5', display: 'block', marginRight: 0}}>
+    {avatar && <img src={host + "/api/files/" + avatar.id} />}
+  </figure>
+)
+
+
 const MediaCard = ({result}) => (
   <Link to={`/admin/users/${result._source.id}`} style={{width: '100%'}}>
-    <Card shadow="higher" style={{width: '100%'}}>
+    <Card shadow="high" style={{width: '100%', marginBottom: '1em'}}>
       <CardContent>
-        <Grid noGutter>
+        <Grid>
           <Cell fixedWidth="4em">
-            <Image src={host + "/api/files/" + result._source.avatar.id}  style={{borderRadius: '50%', display: 'block'}}/>
+            <Avatar {...result._source} />
           </Cell>
           <Cell style={{paddingLeft: 16}}>
-            <H3 size="small" style={{paddingTop: 0, paddingBottom: 0}}>{result._source.label || (result._source.firstname + " " + result._source.lastname)}<br />
+            <H3 size="small" style={{paddingTop: 0, paddingBottom: 0, lineHeight: '1.35em'}}>
+              {result._source.label || (result._source.firstname + " " + result._source.lastname)}<br />
             <SubHeading style={{paddingTop: 0, paddingBottom: 0}}>{result._source.role}</SubHeading></H3>
           </Cell>
         </Grid>
@@ -88,7 +107,7 @@ class BlazeSearchBox extends SearchBox {
 
     return (
       <div>
-        <form onSubmit={this.onSubmit.bind(this)} style={{marginLeft: '1em'}}>
+        <form onSubmit={this.onSubmit.bind(this)} style={{marginRight: '1em'}}>
           <input type="text"
           data-qa="query"
           className={"c-field"}
@@ -127,13 +146,14 @@ class TableSearch extends React.Component {
             <ActionBar>
 
               <ActionBarRow>
-                <HitsStats translations={{
-                  "hitstats.results_found":"{hitCount} results found"
-                }}/>
                 <BlazeSearchBox autofocus={true}
                                 placeholder="filtrer" 
                                 searchOnChange={true} 
-                                prefixQueryFields={["firstname", "lastname"]}/>
+                                prefixQueryFields={["firstname", "lastname", "role", "label"]}/>
+
+                <HitsStats translations={{
+                  "hitstats.results_found":"{hitCount} results found"
+                }}/>
 
                 <ViewSwitcherToggle/>
                 {/*<ViewSwitcherToggle listComponent={Select}/>*/}
@@ -141,9 +161,10 @@ class TableSearch extends React.Component {
 
 
                 <SortingSelector options={[
+                  {label:"Identifiant", field:"id", order:"asc"},
                   {label:"Pertinence", field:"_score", order:"desc"},
-                  {label:"Prénom", field:"firstname", order:"desc"},
-                  {label:"Nom", field:"lastname", order:"desc"}
+                  {label:"Prénom", field:"firstname", order:"asc"},
+                  {label:"Nom", field:"lastname", order:"asc"}
                 ]}/>
               </ActionBarRow>
 
