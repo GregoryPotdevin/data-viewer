@@ -1,0 +1,42 @@
+@media screen and (min-width: 200px) and (max-width: 640px) {
+  .bloc {
+    display:block;
+    clear:both;
+  }
+}
+
+.c-label {
+  color: #777;
+}
+
+.c-label-field-group {
+  position: relative;
+}
+
+.c-form-element.c-form-element--horizontal {
+  width: 100%;
+
+  @media (min-width:30em) {
+    >.c-label, >.c-label:first-child {
+      display: inline-block;
+      width: 10em;
+      text-align: right;
+      vertical-align: top;
+      padding: 0.36em 1em 0.36em 0;
+    }
+    >.c-field, >.c-label-field-group {
+      display: inline-block;
+      width: calc(100% - 10em - 1em);
+      box-sizing: border-box;
+    }
+  }
+}
+
+.c-table__cell {
+  .ac-field-computed {
+    .c-field {
+      border: 0;
+      background: transparent;
+    }
+  }
+}
