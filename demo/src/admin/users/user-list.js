@@ -33,8 +33,7 @@ class HitsTable extends React.Component<any, {}> {
               <th style={{width: 100}}></th>
               <th style={{width: 64, textAlign: 'right'}}>Id</th>
               <th style={{width: 45}}></th>
-              <th>First Name</th>
-              <th>Last Name</th>
+              <th>Name</th>
               <th>Role</th>
             </tr>
           </thead>
@@ -54,8 +53,7 @@ class HitsTable extends React.Component<any, {}> {
                 <td style={{margin: 0, padding: 0, height: 45}}>
                   {_source.avatar && <img src={host + "/api/files/" + _source.avatar.id} style={{width: 45, height: 45, display: 'block'}}/>}
                 </td>
-                <td>{_source.firstname}</td>
-                <td>{_source.lastname}</td>
+                <td>{_source.label}</td>
                 <td>{_source.role}</td>
               </tr>
             ))}
