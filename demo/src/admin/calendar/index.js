@@ -1,4 +1,5 @@
 import React from 'react'
+import { AdminPanel } from '../components'
 
 import BigCalendar from 'react-big-calendar';
 import moment from 'moment';
@@ -14,20 +15,22 @@ BigCalendar.setLocalizer(
 export class CalendarApp extends React.Component {
   render(){
     return (
-      <div style={{padding: 24, fontSize: '0.8em', height: '100%'}}>
-        <BigCalendar
-          culture="fr"
-          events={events}
-          messages={{
-            month: "mois",
-            week: "semaine",
-            day: "jour",
-            today: "aujourd'hui",
-            previous: "précédent",
-            next: "suivant",
-          }}
-        />
-      </div>
+      <AdminPanel title="Calendrier" style={{height: '100%'}}>
+        <div style={{height: 'calc(100% - 70px)'}}>
+          <BigCalendar
+            culture="fr"
+            events={events}
+            messages={{
+              month: "mois",
+              week: "semaine",
+              day: "jour",
+              today: "aujourd'hui",
+              previous: "précédent",
+              next: "suivant",
+            }}
+          />
+        </div>
+      </AdminPanel>
     )
   }
 }

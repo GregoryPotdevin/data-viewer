@@ -20,7 +20,7 @@ import brand from 'img/pam_couleur.png'
 import { Redirect, Router, IndexRoute, Route, Link, browserHistory } from 'react-router'
 import './styles.scss'
 
-import { AdminApp, CalendarApp } from './admin'
+import { AdminApp, CalendarApp, WorkflowApp, UserApp, AddUserApp } from './admin'
 
 const Empty = (props) => (
   null
@@ -32,9 +32,10 @@ render((
     <Route path="/admin" component={AdminApp}>
       <Route path="home" component={Empty}/>
       <Route path="pages" component={Empty}/>
-      <Route path="users" component={Empty}/>
+      <Route path="users" component={UserApp}/>
+      <Route path="users/_add" component={AddUserApp}/>
       <Route path="agenda" component={CalendarApp}/>
-      <Route path="workflow" component={Empty}/>
+      <Route path="workflow" component={WorkflowApp}/>
         {/*<Route path="about" component={About}/>
         <Route path="users" component={Users}>
           <Route path="/user/:userId" component={User}/>
@@ -68,4 +69,4 @@ function addScript(url){
 }
 
 addScript("http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js")
-addScript("https://cdnjs.cloudflare.com/ajax/libs/jsPlumb/2.0.7/jsPlumb.min.js")
+// addScript("https://cdnjs.cloudflare.com/ajax/libs/jsPlumb/2.0.7/jsPlumb.min.js")

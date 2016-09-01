@@ -13,6 +13,7 @@ module.exports = {
   },
   webpack: {
     aliases: {
+      react: path.resolve('node_modules/react'),
       img: path.resolve('demo/src/images')
     }
   }

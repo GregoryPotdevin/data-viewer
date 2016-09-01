@@ -53,7 +53,7 @@ export class SideMenu extends React.Component {
   render(){
     return (
       <Nav className="o-panel" shadow="high" style={{padding: '0.5em', paddingTop: 12, backgroundColor: '#333'}}>
-        <aside className="menu">
+        <aside className="bulma-menu">
           <MenuLabel>Général</MenuLabel>
           <MenuList>
             <MenuItem to="/admin/home">Home</MenuItem>
