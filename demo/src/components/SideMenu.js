@@ -73,9 +73,9 @@ export class SideMenu extends React.Component {
             </SubMenu>
             <MenuItem to="/admin/refs">Référentiels</MenuItem>
             <SubMenu path="/admin/refs">
-              <MenuItem to="/admin/refs/first">Ref 1</MenuItem>
-              <MenuItem to="/admin/refs/second">Ref 2</MenuItem>
-              <MenuItem to="/admin/refs/third">Ref 3</MenuItem>
+              <MenuItem to="/admin/refs/localisations">Localisations</MenuItem>
+              <MenuItem to="/admin/refs/supports">Supports</MenuItem>
+              <MenuItem to="/admin/refs/doctypes">Types de documents</MenuItem>
             </SubMenu>
             <MenuItem to="/admin/forms">Formulaires</MenuItem>
           </MenuList>

@@ -48,7 +48,7 @@ export class AdminApp extends React.Component {
         </Nav>
         <Panel style={{marginTop: 54}}>
           <Grid noGutter className="o-panel">
-            <Cell fixedWidth={180} className="o-panel-container">
+            <Cell fixedWidth={200} className="o-panel-container">
               <SideMenu />
              {/* <Nav light className="o-panel" style={{paddingTop: 12}}>
                 <NavItem bStyle="primary">Link 1</NavItem>

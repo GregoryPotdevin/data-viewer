@@ -20,7 +20,7 @@ import brand from 'img/pam_couleur.png'
 import { Redirect, Router, IndexRoute, Route, Link, browserHistory } from 'react-router'
 import './styles.scss'
 
-import { AdminApp, CalendarApp, WorkflowApp, UserApp, AddUserApp, EditUserApp } from './admin'
+import { AdminApp, CalendarApp, WorkflowApp, UserApp, AddUserApp, EditUserApp, RefList, RefEdit } from './admin'
 
 const Empty = (props) => (
   null
@@ -46,11 +46,11 @@ render((
         */}
       <Route path="medias" component={Empty}/>
       <Route path="tables" component={Empty}>
-        <Route path=":tableId" component={Empty}/>
+        <Route path=":table" component={Empty}/>
       </Route>
-      <Route path="refs" component={Empty}>
-        <IndexRoute component={Empty} />
-        <Route path=":refId" component={Empty} />
+      <Route path="refs">
+        <IndexRoute component={RefList} />
+        <Route path=":table" component={RefEdit} />
       </Route>
       <Route path="forms" component={Empty}/>
     </Route>

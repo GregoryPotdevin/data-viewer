@@ -9,6 +9,27 @@ import { browserHistory } from 'react-router'
 
 const host = "http://localhost:8080"
 
+
+function initials(firstname="", lastname=""){
+  let ini = ""
+  if (firstname.length > 0) ini += firstname[0]
+  if (lastname.length > 0) ini += lastname[0]
+  return ini
+}
+const Avatar = ({avatar, firstname, lastname}) => (
+  <figure className="avatar avatar-xs"
+          data-initial={avatar ? '' : initials(firstname, lastname)}  
+          style={{background: '#42a5f5', marginRight: 0}}>
+    {avatar && <img src={host + "/api/files/" + avatar.id} />}
+  </figure>
+)
+
+export const ColleagueRenderer = (props) => (
+  <div>
+    <Avatar {...props} /> {props.label}
+  </div>
+)
+
 const userFields = [
   {type: "grid", columns: [
     { fixedWidth: 140, fields: [
@@ -18,11 +39,13 @@ const userFields = [
       {name: "firstname", label: "Prénom", type: "string", width: '33%', required: true},
       {name: "lastname", label: "Nom", type: "string", width: '33%', required: true},  
       {name: "label", label: "Nom complet", type: "computed", width: '33%', template: "{{firstname}} {{lastname}}"},  
-      {name: "role", label: "Role", type: "choice", options: [
+      {name: "role", label: "Role", type: "choice", width: '50%', options: [
         {label: "Developer", value: "dev"},
         {label: "Product Manager", value: "manager"},
         {label: "Client", value: "client"},
       ]},
+      {name: "colleagues", label: "Collègues", type: "ref", multiple: true, width: '50%', table: "users", optionRenderer: ColleagueRenderer}
+
     ]}
   ]},
 
